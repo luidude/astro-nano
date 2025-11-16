@@ -1,30 +1,7 @@
----
-import { type CollectionEntry, getCollection } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import { BLOG } from "@consts";
+import React from 'react';
+import { ShoppingCart, Star } from 'lucide-react';
 
-const data = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
-type Acc = {
-  [year: string]: CollectionEntry<"blog">[];
-}
-
-const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {});
-
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
-
-
+export default function ProductNote() {
   const products = [
     {
       id: 1,
@@ -58,38 +35,7 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
     }
   ];
 
-
----
-
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black dark:text-white">
-        Blog
-      </div>
-      <div class="space-y-4">
-        {years.map(year => (
-          <section class="animate space-y-4">
-            <div class="font-semibold text-black dark:text-white">
-              {year}
-            </div>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map((post) => (
-                    <li>
-                      <ArrowCard entry={post}/>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
-    </div>
-
-    <div>
+  return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-slate-800 mb-2">Featured Products</h1>
@@ -125,13 +71,13 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex items-center">
-                    {/* {[...Array(5)].map((_, i) => (
+                    {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         size={16}
                         className={i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-slate-300"}
                       />
-                    ))} */}
+                    ))}
                   </div>
                   <span className="text-sm text-slate-600">({product.rating})</span>
                 </div>
@@ -155,7 +101,7 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
                         : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                     }`}
                   >
-                    {/* <ShoppingCart size={18} /> */}
+                    <ShoppingCart size={18} />
                     {product.inStock ? 'Add' : 'Unavailable'}
                   </button>
                 </div>
@@ -165,6 +111,5 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
         </div>
       </div>
     </div>
-    </div>
-  </Container>
-</PageLayout>
+  );
+}
